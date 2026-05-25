@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Cabinet de la Présidence — Accès Restreint</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a192f;
+    --navy-light: #112240;
+    --navy-mid: #0d1f3c;
+    --gold: #d4af37;
+    --gold-light: #f0d060;
+    --gold-pale: #f5e6a3;
+    --cream: #fdf6e3;
+    --cream-dark: #f4e8c1;
+    --text-dark: #1a1a2e;
+    --text-mid: #3d3d5c;
+    --red-soft: #c0392b;
+    --green-soft: #1e7a4a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    width: 100%; height: 100%; overflow: hidden;
+    font-family: 'Cormorant Garamond', serif;
+    background: var(--navy);
+  }
+
+  /* ─── PARTICLES BACKGROUND ─── */
+  #particles {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  .star {
+    position: absolute; width: 2px; height: 2px;
+    background: var(--gold); border-radius: 50%;
+    animation: twinkle var(--d) ease-in-out infinite;
+    opacity: 0;
+  }
+  @keyframes twinkle {
+    0%,100% { opacity: 0; transform: scale(0.5); }
+    50% { opacity: var(--o); transform: scale(1.2); }
+  }
+
+  /* ─── SCREENS ─── */
+  .screen {
+    position: fixed; inset: 0; z-index: 1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 24px 20px;
+    height: 100%;
+    height: 100dvh;
+    min-height: 0;
+    transition: opacity 0.7s ease, transform 0.7s ease;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    touch-action: pan-y;
+  }
+  .screen > * { flex-shrink: 0; }
+  .screen.hidden { opacity: 0; pointer-events: none; transform: scale(0.97); }
+
+  /* ─── SCREEN 1 : LOGIN ─── */
+  #screen-login { background: var(--navy); }
+
+  .seal-top {
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    margin-bottom: 36px; animation: fadeDown 1s ease both;
+  }
+  .seal-ring {
+    width: 72px; height: 72px; border-radius: 50%;
+    border: 2px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    box-shadow: 0 0 20px rgba(212,175,55,0.3), inset 0 0 20px rgba(212,175,55,0.05);
+    animation: pulse-ring 3s ease-in-out infinite;
+  }
+  @keyframes pulse-ring {
+    0%,100% { box-shadow: 0 0 20px rgba(212,175,55,0.3), inset 0 0 20px rgba(212,175,55,0.05); }
+    50% { box-shadow: 0 0 35px rgba(212,175,55,0.5), inset 0 0 30px rgba(212,175,55,0.1); }
+  }
+  .seal-ring svg { width: 38px; height: 38px; }
+  .seal-ring::before {
+    content: ''; position: absolute; inset: 5px; border-radius: 50%;
+    border: 1px solid rgba(212,175,55,0.3);
+  }
+
+  .institution-title {
+    font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 3.5px;
+    color: var(--gold); text-transform: uppercase; text-align: center;
+    line-height: 1.8; opacity: 0.9;
+  }
+
+  .login-card {
+    width: 100%; max-width: 340px;
+    background: var(--navy-light);
+    border: 1px solid rgba(212,175,55,0.25);
+    border-radius: 4px;
+    padding: 36px 28px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(212,175,55,0.05);
+    animation: fadeUp 1s 0.3s ease both;
+    position: relative; overflow: hidden;
+  }
+  .login-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .access-label {
+    font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px;
+    color: rgba(212,175,55,0.6); text-transform: uppercase;
+    text-align: center; margin-bottom: 6px;
+  }
+  .access-title {
+    font-family: 'Playfair Display', serif; font-size: 22px;
+    color: var(--cream); text-align: center; margin-bottom: 28px;
+    font-weight: 400;
+  }
+
+  .divider {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 24px;
+  }
+  .divider-line { flex: 1; height: 1px; background: rgba(212,175,55,0.2); }
+  .divider-diamond {
+    width: 6px; height: 6px; background: var(--gold); transform: rotate(45deg);
+    opacity: 0.6;
+  }
+
+  .field-label {
+    font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 2.5px;
+    color: rgba(212,175,55,0.7); text-transform: uppercase;
+    display: block; margin-bottom: 8px;
+  }
+  .field-wrap { position: relative; margin-bottom: 20px; }
+  .field-wrap input {
+    width: 100%; padding: 13px 42px 13px 16px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(212,175,55,0.25);
+    border-radius: 3px;
+    color: var(--cream); font-family: 'Cinzel', serif;
+    font-size: 16px; letter-spacing: 4px; text-align: center;
+    outline: none; transition: border-color 0.3s, box-shadow 0.3s;
+    -webkit-text-security: disc;
+    text-security: disc;
+  }
+  .field-wrap input:focus {
+    border-color: rgba(212,175,55,0.6);
+    box-shadow: 0 0 0 3px rgba(212,175,55,0.08);
+  }
+  .field-wrap input.error-shake {
+    animation: shake 0.4s ease;
+    border-color: rgba(192,57,43,0.7) !important;
+  }
+  .lock-icon {
+    position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+    opacity: 0.4;
+  }
+
+  .error-msg {
+    font-size: 11px; color: #e87070; text-align: center;
+    margin-bottom: 16px; min-height: 16px;
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    letter-spacing: 0.3px;
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .error-msg.show { opacity: 1; }
+
+  .btn-access {
+    width: 100%; padding: 14px;
+    background: linear-gradient(135deg, #b8941f, var(--gold), #e6c84a);
+    border: none; border-radius: 3px;
+    font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 2.5px;
+    color: var(--navy); font-weight: 600; text-transform: uppercase;
+    cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(212,175,55,0.3);
+  }
+  .btn-access:active { transform: scale(0.98); }
+
+  /* Show password toggle */
+  .show-pass {
+    font-size: 11px; color: rgba(212,175,55,0.5);
+    text-align: right; margin-top: -14px; margin-bottom: 16px;
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    cursor: pointer; user-select: none;
+  }
+  .show-pass:active { color: var(--gold); }
+
+  /* ─── SCREEN 2 : ENVELOPE ─── */
+  #screen-envelope { background: var(--navy); }
+
+  .envelope-title {
+    font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic;
+    color: var(--cream); text-align: center; margin-bottom: 10px;
+    line-height: 1.5; padding: 0 10px;
+    animation: fadeDown 0.8s ease both;
+  }
+  .envelope-sub {
+    font-family: 'Cinzel', serif; font-size: 9.5px; letter-spacing: 2.5px;
+    color: rgba(212,175,55,0.6); text-align: center; text-transform: uppercase;
+    margin-bottom: 48px; animation: fadeDown 0.8s 0.15s ease both;
+  }
+
+  .envelope-wrap {
+    position: relative; width: 280px;
+    animation: float 3.5s ease-in-out infinite, fadeUp 1s 0.3s ease both;
+    cursor: pointer;
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .envelope-svg { width: 100%; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.6)); }
+
+  .tap-hint {
+    text-align: center; margin-top: 28px;
+    font-family: 'Cormorant Garamond', serif; font-size: 13px; font-style: italic;
+    color: rgba(212,175,55,0.5);
+    animation: fadeUp 1s 0.6s ease both, breathe 2.5s 1.5s ease-in-out infinite;
+  }
+  @keyframes breathe {
+    0%,100% { opacity: 0.5; }
+    50% { opacity: 0.9; }
+  }
+
+  .envelope-wrap.opening { animation: openEnvelope 0.6s ease forwards !important; }
+  @keyframes openEnvelope {
+    0% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-20px) scale(1.08); }
+    100% { transform: translateY(0) scale(0.85); opacity: 0; }
+  }
+
+  /* ─── SCREEN 3 : LETTER ─── */
+  #screen-letter {
+    background: var(--navy);
+    justify-content: flex-start;
+    align-items: center;
+    padding: 24px 16px 40px;
+  }
+
+  .letter-paper {
+    width: 100%; max-width: 420px; margin: 0 auto;
+    background: var(--cream);
+    border-radius: 2px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(212,175,55,0.2);
+    overflow: hidden;
+    animation: fadeUp 0.8s ease both;
+    position: relative;
+  }
+
+  .letter-header {
+    background: var(--navy);
+    padding: 24px 24px 20px;
+    position: relative; overflow: hidden;
+  }
+  .letter-header::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold) 30%, var(--gold) 70%, transparent);
+  }
+
+  .letter-emblem {
+    display: flex; align-items: center; gap: 14px; margin-bottom: 16px;
+  }
+  .emblem-circle {
+    width: 44px; height: 44px; border-radius: 50%;
+    border: 1.5px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 0 15px rgba(212,175,55,0.3);
+  }
+  .emblem-circle svg { width: 22px; height: 22px; }
+  .emblem-text { flex: 1; }
+  .emblem-text .title-line1 {
+    font-family: 'Cinzel', serif; font-size: 8.5px; letter-spacing: 2.5px;
+    color: var(--gold); text-transform: uppercase; display: block; margin-bottom: 3px;
+  }
+  .emblem-text .title-line2 {
+    font-family: 'Playfair Display', serif; font-size: 15px;
+    color: var(--cream); display: block; line-height: 1.2;
+  }
+
+  .confidential-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    border: 1px solid rgba(212,175,55,0.4); border-radius: 2px;
+    padding: 4px 10px;
+    font-family: 'Cinzel', serif; font-size: 8.5px; letter-spacing: 2px;
+    color: rgba(212,175,55,0.8); text-transform: uppercase;
+  }
+  .conf-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); opacity: 0.8; }
+
+  .letter-ref {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-top: 14px;
+    font-family: 'Cormorant Garamond', serif; font-size: 11px;
+    color: rgba(212,175,55,0.6); font-style: italic;
+  }
+
+  /* Letter body */
+  .letter-body { padding: 28px 24px 24px; }
+
+  .letter-subject {
+    font-family: 'Playfair Display', serif; font-size: 13.5px; font-weight: 600;
+    color: var(--text-dark); margin-bottom: 18px; line-height: 1.5;
+    padding-bottom: 14px; border-bottom: 1px solid rgba(212,175,55,0.3);
+  }
+  .letter-subject .letter-heading {
+    margin: 0 0 10px;
+  }
+
+  .salutation {
+    font-family: 'Playfair Display', serif; font-size: 15px; font-style: italic;
+    color: var(--text-dark); margin-bottom: 16px;
+  }
+
+  .letter-p {
+    font-family: 'Cormorant Garamond', serif; font-size: 15.5px;
+    color: var(--text-mid); line-height: 1.75; margin-bottom: 14px;
+    text-align: justify; hyphens: auto;
+  }
+
+  .letter-heading {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    color: var(--navy);
+    text-transform: uppercase;
+    display: block;
+    padding-left: 12px;
+    border-left: 3px solid var(--gold);
+    font-style: normal;
+  }
+  .letter-body > .letter-heading {
+    margin: 22px 0 8px;
+  }
+
+  .promise-box {
+    background: rgba(212,175,55,0.07);
+    border: 1px solid rgba(212,175,55,0.25);
+    border-radius: 2px; padding: 16px 18px; margin: 16px 0;
+  }
+  .promise-item {
+    display: flex; gap: 12px; align-items: flex-start;
+    font-family: 'Cormorant Garamond', serif; font-size: 14.5px;
+    color: var(--text-mid); line-height: 1.6;
+    margin-bottom: 10px;
+  }
+  .promise-item:last-child { margin-bottom: 0; }
+  .promise-bullet {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--gold); margin-top: 8px; flex-shrink: 0; opacity: 0.8;
+  }
+
+  .letter-closing {
+    margin-top: 22px; padding-top: 16px;
+    border-top: 1px solid rgba(212,175,55,0.2);
+  }
+  .closing-formula {
+    font-family: 'Playfair Display', serif; font-size: 14px; font-style: italic;
+    color: var(--text-mid); margin-bottom: 16px; line-height: 1.6;
+  }
+  .signature-block {
+    display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
+  }
+  .signature-name {
+    font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic;
+    color: var(--text-dark);
+  }
+  .signature-title {
+    font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 2px;
+    color: var(--green-soft);
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  /* verdict section */
+  .verdict-section {
+    padding: 24px 24px 28px;
+    background: var(--navy-light);
+    border-top: 2px solid rgba(212,175,55,0.3);
+  }
+  .verdict-title {
+    font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px;
+    color: var(--gold); text-transform: uppercase; text-align: center;
+    margin-bottom: 6px;
+  }
+  .verdict-sub {
+    font-family: 'Cormorant Garamond', serif; font-size: 13px; font-style: italic;
+    color: rgba(245,230,163,0.6); text-align: center; margin-bottom: 22px;
+  }
+
+  .btn-verdict {
+    width: 100%; padding: 15px 20px;
+    border: none; border-radius: 3px;
+    font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 1.5px;
+    text-transform: uppercase; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 12px;
+  }
+  .btn-verdict:last-child { margin-bottom: 0; }
+
+  .btn-validate {
+    background: linear-gradient(135deg, #1a5c36, #27ae60, #2ecc71);
+    color: #fff;
+    box-shadow: 0 6px 24px rgba(39,174,96,0.35);
+  }
+  .btn-validate:active { transform: scale(0.98); }
+
+  .btn-refuse {
+    background: rgba(192,57,43,0.15);
+    border: 1px solid rgba(192,57,43,0.4);
+    color: rgba(231,76,60,0.8);
+    position: relative;
+    transition: transform 0.15s ease, left 0s, top 0s;
+  }
+
+  /* ─── MODAL ─── */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(5,10,20,0.85);
+    backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px; opacity: 0; pointer-events: none;
+    transition: opacity 0.4s;
+  }
+  .modal-overlay.show { opacity: 1; pointer-events: all; }
+
+  .modal-card {
+    width: 100%; max-width: 320px;
+    background: var(--navy-light);
+    border: 1px solid rgba(212,175,55,0.3);
+    border-radius: 6px; padding: 32px 24px;
+    text-align: center;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+    transform: translateY(20px) scale(0.95);
+    transition: transform 0.4s ease;
+    position: relative; overflow: hidden;
+  }
+  .modal-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, #e87070, transparent);
+  }
+  .modal-overlay.show .modal-card { transform: translateY(0) scale(1); }
+
+  .modal-icon { font-size: 40px; margin-bottom: 12px; display: block; }
+  .modal-code {
+    font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px;
+    color: #e87070; text-transform: uppercase; margin-bottom: 8px;
+  }
+  .modal-title {
+    font-family: 'Playfair Display', serif; font-size: 20px;
+    color: var(--cream); margin-bottom: 14px;
+  }
+  .modal-body {
+    font-family: 'Cormorant Garamond', serif; font-size: 15px;
+    color: rgba(245,230,163,0.7); line-height: 1.6; margin-bottom: 24px;
+  }
+  .btn-modal-close {
+    width: 100%; padding: 13px;
+    background: linear-gradient(135deg, #b8941f, var(--gold));
+    border: none; border-radius: 3px;
+    font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 2.5px;
+    color: var(--navy); font-weight: 600; text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  /* ─── SUCCESS OVERLAY ─── */
+  .success-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: var(--navy);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.6s;
+  }
+  .success-overlay.show { opacity: 1; pointer-events: all; }
+  .success-ring {
+    width: 90px; height: 90px; border-radius: 50%;
+    border: 2px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 24px;
+    box-shadow: 0 0 50px rgba(212,175,55,0.4);
+    animation: success-pulse 2s ease-in-out infinite;
+  }
+  @keyframes success-pulse {
+    0%,100% { box-shadow: 0 0 50px rgba(212,175,55,0.4); }
+    50% { box-shadow: 0 0 80px rgba(212,175,55,0.7); }
+  }
+  .success-ring svg { width: 44px; height: 44px; }
+  .success-text {
+    font-family: 'Playfair Display', serif; font-size: 28px;
+    color: var(--cream); text-align: center; margin-bottom: 10px; padding: 0 24px;
+  }
+  .success-sub {
+    font-family: 'Cinzel', serif; font-size: 9.5px; letter-spacing: 3px;
+    color: var(--gold); text-transform: uppercase; text-align: center;
+  }
+
+  /* ─── UTILS ─── */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-6px); }
+    80% { transform: translateX(4px); }
+  }
+
+  /* scrollbar */
+  #screen-letter::-webkit-scrollbar { width: 4px; }
+  #screen-letter::-webkit-scrollbar-track { background: transparent; }
+  #screen-letter::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.3); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<!-- Particle field -->
+<div id="particles"></div>
+
+<!-- ══════ SCREEN 1 : LOGIN ══════ -->
+<div class="screen" id="screen-login">
+  <div class="seal-top">
+    <div class="seal-ring">
+      <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 4L23.5 13H33L25.5 18.5L28.5 28L20 22.5L11.5 28L14.5 18.5L7 13H16.5L20 4Z" fill="none" stroke="#d4af37" stroke-width="1.2"/>
+        <circle cx="20" cy="20" r="6" fill="none" stroke="#d4af37" stroke-width="0.8" opacity="0.5"/>
+      </svg>
+    </div>
+    <span class="institution-title">Cabinet de la Présidence<br>République Amoureuse</span>
+  </div>
+
+  <div class="login-card">
+    <p class="access-label">Protocole de Sécurité</p>
+    <h1 class="access-title">Accès Restreint</h1>
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-diamond"></div>
+      <div class="divider-line"></div>
+    </div>
+
+    <label class="field-label" for="password-input">Identifiant Présidentiel</label>
+    <div class="field-wrap">
+      <input type="password" id="password-input" placeholder="• • • • •" autocomplete="off"
+             inputmode="text" spellcheck="false" autocapitalize="characters"
+             onkeydown="if(event.key==='Enter') checkPassword()">
+      <svg class="lock-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="2">
+        <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+    </div>
+    <p class="show-pass" onclick="togglePass()">Afficher l'identifiant</p>
+    <p class="error-msg" id="error-msg">Identifiant non reconnu par les services de sécurité.</p>
+
+    <button class="btn-access" onclick="checkPassword()">
+      Authentification &nbsp;→
+    </button>
+  </div>
+</div>
+
+<!-- ══════ SCREEN 2 : ENVELOPE ══════ -->
+<div class="screen hidden" id="screen-envelope">
+  <h2 class="envelope-title">Madame la Présidente,<br>un pli confidentiel<br>attend votre ouverture.</h2>
+  <p class="envelope-sub">Priorité Absolue · Confidentiel · Défense</p>
+
+  <div class="envelope-wrap" id="envelope" onclick="openEnvelope()">
+    <!-- SVG Envelope -->
+    <svg class="envelope-svg" viewBox="0 0 280 196" xmlns="http://www.w3.org/2000/svg">
+      <!-- Shadow -->
+      <ellipse cx="140" cy="190" rx="110" ry="6" fill="rgba(0,0,0,0.35)"/>
+      <!-- Body -->
+      <rect x="4" y="40" width="272" height="148" rx="4" fill="#0d1f3c"/>
+      <rect x="4" y="40" width="272" height="148" rx="4" fill="none" stroke="#d4af37" stroke-width="1.2"/>
+      <!-- Bottom fold lines (V) -->
+      <path d="M4 188 L140 105 L276 188" fill="none" stroke="rgba(212,175,55,0.25)" stroke-width="1"/>
+      <!-- Side flap lines -->
+      <path d="M4 40 L140 105" fill="none" stroke="rgba(212,175,55,0.15)" stroke-width="1"/>
+      <path d="M276 40 L140 105" fill="none" stroke="rgba(212,175,55,0.15)" stroke-width="1"/>
+      <!-- Top flap (closed) -->
+      <path d="M4 40 L140 118 L276 40 Z" fill="#112240"/>
+      <path d="M4 40 L140 118 L276 40" fill="none" stroke="#d4af37" stroke-width="1.2"/>
+      <!-- Gold border decoration -->
+      <rect x="12" y="48" width="256" height="132" rx="2" fill="none" stroke="rgba(212,175,55,0.15)" stroke-width="0.8" stroke-dasharray="4 4"/>
+      <!-- Wax seal -->
+      <circle cx="140" cy="104" r="22" fill="#7a1a10"/>
+      <circle cx="140" cy="104" r="22" fill="none" stroke="#d4af37" stroke-width="1.5"/>
+      <circle cx="140" cy="104" r="17" fill="none" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/>
+      <!-- H letter in seal -->
+      <text x="140" y="111" text-anchor="middle" fill="#d4af37" font-family="Playfair Display, serif" font-size="22" font-style="italic">H</text>
+      <!-- Corner flourishes -->
+      <path d="M20 58 Q24 54 28 58" fill="none" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/>
+      <path d="M260 58 Q256 54 252 58" fill="none" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/>
+      <path d="M20 172 Q24 176 28 172" fill="none" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/>
+      <path d="M260 172 Q256 176 252 172" fill="none" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/>
+    </svg>
+  </div>
+  <p class="tap-hint">✦ Appuyez sur le sceau pour ouvrir ✦</p>
+</div>
+
+<!-- ══════ SCREEN 3 : LETTER ══════ -->
+<div class="screen hidden" id="screen-letter">
+  <div class="letter-paper">
+
+    <!-- Header -->
+    <div class="letter-header">
+      <div class="letter-emblem">
+        <div class="emblem-circle">
+          <svg viewBox="0 0 40 40" fill="none">
+            <path d="M20 4L23.5 13H33L25.5 18.5L28.5 28L20 22.5L11.5 28L14.5 18.5L7 13H16.5L20 4Z" fill="none" stroke="#d4af37" stroke-width="1.3"/>
+          </svg>
+        </div>
+        <div class="emblem-text">
+          <span class="title-line1">Cabinet Officiel</span>
+          <span class="title-line2">République Amoureuse</span>
+        </div>
+      </div>
+      <div class="confidential-badge">
+        <span class="conf-dot"></span>
+        Pli confidentiel · Priorité absolue
+      </div>
+      <div class="letter-ref">
+        <span>Réf. : RA/2026/HABY-001</span>
+        <span>Dakar, Dec. 2026</span>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="letter-body">
+      <div class="letter-subject">
+        <em class="letter-heading">Objet du document</em>
+        Lettre de motivation officielle pour le poste de Partenaire Idéal
+      </div>
+
+      <p class="salutation">Madame la Présidente,</p>
+
+      <p class="letter-p">Faisant suite à votre accord de m'accorder une audience, je vous soumets les motivations réelles qui me poussent à postuler auprès de votre cœur :</p>
+
+      <span class="letter-heading">§ 1 — L'origine de ma démarche</span>
+      <p class="letter-p">Tout a commencé sur Facebook. La première fois que mes yeux se sont posés sur ta photo, j'ai automatiquement ressenti des frissons dans le cœur. C'était comme une évidence, comme si je te connaissais déjà quelque part. Nos premières discussions n'ont fait que confirmer cette profonde envie de développer notre relation, ce qui m'a poussé à te demander ton WhatsApp. Grâce à ta bienveillance et ton ouverture d'esprit, tu as accepté.</p>
+
+      <span class="letter-heading">§ 2 — Expérience acquise sur le terrain</span>
+      <p class="letter-p">Notre rendez-vous en vrai a été un moment inoubliable. J'ai passé mon temps à t'écouter avec une attention immense, tellement l'envie de te connaître en profondeur était forte. Les sourires que nous avons partagés ce jour-là m'ont prouvé que tu étais la bonne.</p>
+      <p class="letter-p">J'étais prêt à rester assis là toute la nuit malgré la fraîcheur qui gelait mon corps… mais ton humanisme et ta gentillesse t'ont poussée à me sauver en me disant de rentrer. Ce geste m'a profondément marqué : il prouve que tu n'es pas égoïste et que tu penses aux autres. Pourtant, sache que pour toi, je suis prêt à tout endurer.</p>
+
+      <span class="letter-heading">§ 3 — Mes objectifs pour ce poste</span>
+      <p class="letter-p">Je suis fasciné par ta personnalité, ta douceur et la pureté de ton cœur. Juste en plongeant mon regard dans tes yeux si apaisants, je me retrouve dans un océan de joie. Tu es une reine, Haby, et je souhaite être le roi qui saura te combler.</p>
+
+      <p class="letter-p" style="font-weight:500; color: var(--text-dark); font-size:15px;">Si ma candidature est retenue, je m'engage à :</p>
+
+      <div class="promise-box">
+        <div class="promise-item">
+          <div class="promise-bullet"></div>
+          <span>Être cette personne attentive qui te comblera de joie au quotidien.</span>
+        </div>
+        <div class="promise-item">
+          <div class="promise-bullet"></div>
+          <span>Être le bras droit solide qui te soutiendra dans tous tes combats.</span>
+        </div>
+        <div class="promise-item">
+          <div class="promise-bullet"></div>
+          <span>Devenir l'image parfaite de l'homme que tu attendais — un véritable homme pour toi.</span>
+        </div>
+      </div>
+
+      <p class="letter-p">Mon objectif pour cette période de vacances est que nos échanges nous permettent de valider cette complicité à distance, afin qu'à la fin des fêtes, l'officialisation de notre union soit une évidence pour nous deux.</p>
+
+      <div class="letter-closing">
+        <p class="closing-formula">En espérant que mon profil saura retenir votre attention et apaiser la « crise institutionnelle », je vous souhaite un excellent voyage. 😉</p>
+        <div class="signature-block">
+          <span class="signature-name">Votre candidat favori</span>
+          <span class="signature-title">Candidat au Trône Royal ✦ 2026</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Verdict -->
+    <div class="verdict-section">
+      <p class="verdict-title">Décision Présidentielle</p>
+      <p class="verdict-sub">La Présidente est invitée à statuer sur ce dossier</p>
+
+      <button class="btn-verdict btn-validate" onclick="validateCandidate()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Valider la candidature
+      </button>
+      <button class="btn-verdict btn-refuse" id="btn-refuse" onmouseenter="evadeButton(this)" onclick="showRefuseModal()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        Refuser la candidature
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════ MODAL 403 ══════ -->
+<div class="modal-overlay" id="modal-refuse">
+  <div class="modal-card">
+    <span class="modal-icon">⚠️</span>
+    <p class="modal-code">Erreur 403 — Accès Refusé</p>
+    <h3 class="modal-title">Action non autorisée</h3>
+    <p class="modal-body">Cette action est bloquée en période de crise institutionnelle. Veuillez réévaluer votre choix présidentiel, Madame la Présidente. 😜</p>
+    <button class="btn-modal-close" onclick="closeModal()">Réévaluer mon choix →</button>
+  </div>
+</div>
+
+<!-- ══════ SUCCESS ══════ -->
+<div class="success-overlay" id="success-overlay">
+  <div class="success-ring">
+    <svg viewBox="0 0 44 44" fill="none">
+      <polyline points="8 22 18 32 36 14" stroke="#d4af37" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <h2 class="success-text">Candidature validée, Monsieur le futur Roi ! 👑</h2>
+  <p class="success-sub">Redirection vers WhatsApp…</p>
+</div>
+
+<script>
+// ── PARTICLES ──
+(function(){
+  const c = document.getElementById('particles');
+  for(let i=0; i<55; i++){
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.cssText = `
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      --d:${2+Math.random()*4}s;
+      --o:${0.3+Math.random()*0.5};
+      animation-delay:${Math.random()*4}s;
+      width:${1+Math.random()*2}px;
+      height:${1+Math.random()*2}px;
+    `;
+    c.appendChild(s);
+  }
+})();
+
+// ── PASSWORD ──
+let showingPass = false;
+function togglePass(){
+  const inp = document.getElementById('password-input');
+  showingPass = !showingPass;
+  inp.type = showingPass ? 'text' : 'password';
+  document.querySelector('.show-pass').textContent = showingPass ? "Masquer l'identifiant" : "Afficher l'identifiant";
+}
+
+function checkPassword(){
+  const val = document.getElementById('password-input').value.trim().toUpperCase();
+  const err = document.getElementById('error-msg');
+  if(val === 'HABY'){
+    err.classList.remove('show');
+    goToEnvelope();
+  } else {
+    const inp = document.getElementById('password-input');
+    inp.classList.add('error-shake');
+    err.classList.add('show');
+    setTimeout(()=> inp.classList.remove('error-shake'), 500);
+    inp.value = '';
+    inp.focus();
+  }
+}
+
+// ── TRANSITIONS ──
+function goToEnvelope(){
+  const s1 = document.getElementById('screen-login');
+  const s2 = document.getElementById('screen-envelope');
+  s1.style.opacity = '0';
+  s1.style.transform = 'scale(1.04)';
+  setTimeout(()=>{
+    s1.classList.add('hidden');
+    s1.style.opacity = '';
+    s1.style.transform = '';
+    s2.classList.remove('hidden');
+  }, 600);
+}
+
+function openEnvelope(){
+  const env = document.getElementById('envelope');
+  env.classList.add('opening');
+  setTimeout(()=>{
+    const s2 = document.getElementById('screen-envelope');
+    const s3 = document.getElementById('screen-letter');
+    s2.style.opacity = '0';
+    setTimeout(()=>{
+      s2.classList.add('hidden');
+      s2.style.opacity = '';
+      s3.classList.remove('hidden');
+      s3.scrollTop = 0;
+    }, 500);
+  }, 600);
+}
+
+// ── REFUSE BUTTON (EVASION) ──
+let evadeCount = 0;
+function evadeButton(btn){
+  evadeCount++;
+  if(evadeCount <= 4){
+    const parent = btn.parentElement;
+    const pw = parent.offsetWidth;
+    const bw = btn.offsetWidth;
+    const maxLeft = pw - bw;
+    const randX = Math.floor(Math.random() * maxLeft);
+    btn.style.position = 'relative';
+    btn.style.left = (randX - (pw/2 - bw/2)) + 'px';
+    btn.style.transition = 'left 0.18s ease';
+  }
+}
+
+function showRefuseModal(){
+  document.getElementById('modal-refuse').classList.add('show');
+}
+function closeModal(){
+  document.getElementById('modal-refuse').classList.remove('show');
+  // Reset button position
+  const btn = document.getElementById('btn-refuse');
+  btn.style.left = '0px';
+  evadeCount = 0;
+}
+
+// ── VALIDATE ──
+function validateCandidate(){
+  const ov = document.getElementById('success-overlay');
+  ov.classList.add('show');
+  setTimeout(()=>{
+    window.location.href = "https://wa.me/221706980159?text=Candidature%20valid%C3%A9e%2C%20Monsieur%20le%20futur%20Roi%20!%20%F0%9F%91%91%F0%9F%91%B8";
+  }, 2200);
+}
+</script>
+</body>
+</html>
